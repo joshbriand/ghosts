@@ -24,8 +24,8 @@ usernames = []
 for user in users:
     usernames.append(user.name)
 
-names=['admin', 'josh', 'adam', 'paul', 'stephen', 'james']
-passwords=['admin', 'josh', 'adam', 'paul', 'stephen', 'james']
+names=['admin', 'josh', 'adam', 'paul', 'stephen', 'james', 'jonathan']
+passwords=['admin', 'josh', 'adam', 'paul', 'stephen', 'james', 'jonathan']
 
 for x in range(0,len(names)):
     if names[x] in usernames:
@@ -36,6 +36,7 @@ for x in range(0,len(names)):
         session.commit()
         print names[x] + " added"
 
+'''
 player1 = [2, 3, 4, 5, 6]
 player2 = [3, 2, 2, 2, 2]
 date = datetime.now()
@@ -108,3 +109,4 @@ for x in range(0, len(player1)):
     session.add(completeGame)
     session.commit()
 print "completed games added"
+'''
