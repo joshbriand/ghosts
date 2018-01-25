@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<title>Ghosts!</title>
+	<link href="{{ url_for('static',filename='ghosts.css') }}" rel="stylesheet" type="text/css">
+</head>
+<body>
+	<div class="row" id="header">
+		<div class="col-3 head">
+			<h1>
+				<i>Ghosts!</i>
+			</h1>
+		</div>
+		<div class="col-6 head">
+			Logged in as {{playerUsername}}
+			<br>
+			{% with messages=get_flashed_messages() %}
+				{% if messages %}
+					{% for message in messages %}
+						{{ message }}
+					{% endfor %}
+				{% endif %}
+			{% endwith %}
+		</div>
+		<div class="col-3 head">
+			<table>
+				<a href="{{ url_for('logout') }}">
+					<input type="submit" value="Log Out"></input>
+				</a>
+			</table>
+		</div>
+	</div>
+	<div class="row" id="canvas">
+		<br>
+		<div class="col-3" id="side"></div>
+		<div class="col-6">
+			<br>
+			<div id="menuContainer">
+				<div id="subMenuContainer">
+					<div id="newGameOption">
+						New Game
+					</div>
+					<div id="continueGameOption">
+						Continue
+					</div>
+					<div id="userOptionsOption">
+						Options
+					</div>
+					<div id="statsOption">
+						Statistics
+					</div>
+				</div>
+				<div id="newGame">
+					<br>
+					<form id="startGame" method="POST">
+						<br>
+						<span>
+							Select Opponent
+						</span>
+						<select name="opponent" class="select">
+							{% for user in users %}
+								{% if user.name != 'admin' and user.name != playerUsername %}
+									<option value="{{ user.id }}">{{ user.name }}</option>
+								{% endif %}
+							{% endfor %}
+						</select>
+						<br>
+						<br>
+						<input type="submit" name="startGame" value="Start Game" class="button"></input>
+					</form>
+				</div>
+				<div id="continueGame">
+					<br>
+					<form id="startExistingGame" method="POST">
+						<br>
+						<span>
+							Select Game
+						</span>
+						<select name="existingGame" class="select">
+							{% for game in userGames %}
+								{% for player in users %}
+									{% if player.name != playerUsername and (player.id == game.player1id or player.id == game.player2id) %}
+										{% if game.previousPlayer == userid %}
+											<option value="{{ game.id }}">Game #{{ game.id }} vs {{ player.name }}</option>
+										{% else %}
+											<option value="{{ game.id }}">Game #{{ game.id }} vs {{ player.name }}**Your turn**</option>
+										{% endif %}
+									{% endif %}
+								{% endfor %}
+							{% endfor %}
+						</select>
+						<br>
+						<br>
+						<input type="submit" name="startExistingGame" value="Continue Game" class="button"></input>
+					</form>
+				</div>
+				<div id="options">
+					<form id="notifications" method="POST">
+						<span>
+							Email Notifications
+						</span>
+						{% if userNotification == 'no' %}
+							<input type="checkbox" name="notifications"></input>
+						{% else %}
+							<input type="checkbox" name="notifications" checked></input>
+						{% endif %}
+						<br>
+						<input type="submit" name="notifications" value="Update" class="button"></input>
+					</form>
+					<form id="changePassword" method="POST">
+						<span>
+							Current Password
+						</span>
+						<input type="password" name="currentPassword"></input>
+						<br>
+						<span>
+							New Password
+						</span>
+						<input type="password" name="newPassword"></input>
+						<br>
+						<span>
+							Confirm New Password
+						</span>
+						<input type="password" name="confirmPassword"></input>
+						<br>
+						<input type="submit" name="changePassword" value="Change" class="button"></input>
+					</form>
+				</div>
+				<div id="statistics">
+					<br>
+					<span>
+						Games Played - {{ userCompleted|length }}
+					</span>
+					<br>
+					<span>
+						Games Won - {{ userWins|length }} ({{userWins|length / userCompleted|length * 100 }}%)
+					</span>
+					<br>
+					<span>
+						Games Won by Exit -  {{ exitWins }} ({{exitWins / userWins|length * 100 }}%)
+					</span>
+					<br>
+					<span>
+						Games Won by Blue Ghosts - {{ blueWins }} ({{blueWins / userWins|length * 100 }}%)
+					</span>
+					<br>
+					<span>
+						Games Won by Yellow Ghosts - {{ yellowWins }} ({{yellowWins / userWins|length * 100 }}%)
+					</span>
+					<br>
+				</div>
+			</div>
+		</div>
+		<div class="col-3" id="side"></div>
+	</div>
+	<script type="text/javascript" src="{{ url_for('static',filename='jquery.min.js') }}"></script>
+	<script type="text/javascript" src="{{ url_for('static',filename='menu.js') }}"></script>
+</body>

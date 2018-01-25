@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<title>Ghosts!</title>
+	<link href="{{ url_for('static',filename='ghosts.css') }}" rel="stylesheet" type="text/css">
+</head>
+<body>
+	<div class="row" id="header">
+		<div class="col-3 head">
+			<h1>
+				<i>Ghosts!</i>
+			</h1>
+		</div>
+		<table>
+			<form>
+				<div class="col-3 head">
+					Username
+					<input type="text" name="username"></input>
+				</div>
+				<div class="col-3 head">
+					Password
+					<input type="password" name="password"></input>
+				</div>
+				<div class="col-3 head">
+					<input type="submit" value="Log In"></input>
+				</div>
+			</form>
+		</table>
+	</div>
+	<div class="row" id="canvas">
+		<br>
+		<div class="col-half" id="side"></div>
+		<div class="col-2" id="side">
+			<h2>{{playerUsername}}</h2>
+			<table id="board">
+				<tr class="row-1" id="player">
+					<td class="col-1" id="one-a-player"></td>
+					<td class="col-1" id="one-b-player"></td>
+				</tr>
+				<tr class="row-1" id="player">
+					<td class="col-1" id="two-a-player"></td>
+					<td class="col-1" id="two-b-player"></td>
+				</tr>
+				<tr class="row-1" id="player">
+					<td class="col-1" id="three-a-player"></td>
+					<td class="col-1" id="three-b-player"></td>
+				</tr>
+				<tr class="row-1" id="player">
+					<td class="col-1" id="four-a-player"></td>
+					<td class="col-1" id="four-b-player"></td>
+				</tr>
+			</table>
+			<br>
+			<form id="turnSubmit">
+				<input id="submitTurn" type="submit" value="Submit Turn"></input>
+			</form>
+		</div>
+		<div class="col-half" id="side"></div>
+		<div id="board">
+			<br>
+			<table>
+				<tr class="row-1" id="row-one">
+					<td class="col-1 exit" id="b-1-1"></td>
+					<td class="col-1" id="b-2-1"></td>
+					<td class="col-1" id="b-3-1"></td>
+					<td class="col-1" id="b-4-1"></td>
+					<td class="col-1" id="b-5-1"></td>
+					<td class="col-1 exit" id="b-6-1"></td>
+				</tr>
+				<tr class="row-1" id="row-two">
+					<td class="col-1" id="b-1-2"></td>
+					<td class="col-1" id="b-2-2"></td>
+					<td class="col-1" id="b-3-2"></td>
+					<td class="col-1" id="b-4-2"></td>
+					<td class="col-1" id="b-5-2"></td>
+					<td class="col-1" id="b-6-2"></td>
+				</tr>
+				<tr class="row-1" id="row-three">
+					<td class="col-1" id="b-1-3"></td>
+					<td class="col-1" id="b-2-3"></td>
+					<td class="col-1" id="b-3-3"></td>
+					<td class="col-1" id="b-4-3"></td>
+					<td class="col-1" id="b-5-3"></td>
+					<td class="col-1" id="b-6-3"></td>
+				</tr>
+				<tr class="row-1" id="row-four">
+					<td class="col-1" id="b-1-4"></td>
+					<td class="col-1" id="b-2-4"></td>
+					<td class="col-1" id="b-3-4"></td>
+					<td class="col-1" id="b-4-4"></td>
+					<td class="col-1" id="b-5-4"></td>
+					<td class="col-1" id="b-6-4"></td>
+				</tr>
+				<tr class="row-1" id="row-five">
+					<td class="col-1" id="b-1-5"></td>
+					<td class="col-1" id="b-2-5"></td>
+					<td class="col-1" id="b-3-5"></td>
+					<td class="col-1" id="b-4-5"></td>
+					<td class="col-1" id="b-5-5"></td>
+					<td class="col-1" id="b-5-5"></td>
+				</tr>
+				<tr class="row-1" id="row-six">
+					<td class="col-1 exit" id="b-1-6"></td>
+					<td class="col-1" id="b-2-6"></td>
+					<td class="col-1" id="b-3-6"></td>
+					<td class="col-1" id="b-4-6"></td>
+					<td class="col-1" id="b-5-6"></td>
+					<td class="col-1  exit" id="b-6-6"></td>
+				</tr>
+			</table>
+		</div>
+		<div class="col-half" id="side"></div>
+		<div class="col-2" id="side">
+			<h2> {{opponentUsername}}</h2>
+			<table>
+				<tr class="row-1" id="opponent">
+					<td class="col-1" id="one-a-opponent"></td>
+					<td class="col-1" id="one-b-opponent"></td>
+				</tr>
+				<tr class="row-1" id="opponent">
+					<td class="col-1" id="two-a-opponent"></td>
+					<td class="col-1" id="two-b-opponent"></td>
+				</tr>
+				<tr class="row-1" id="opponent">
+					<td class="col-1" id="three-a-opponent"></td>
+					<td class="col-1" id="three-b-opponent"></td>
+				</tr>
+				<tr class="row-1" id="opponent">
+					<td class="col-1" id="four-a-opponent"></td>
+					<td class="col-1" id="four-b-opponent"></td>
+				</tr>
+			</table>
+		</div>
+		<div class="col-half" id="side"></div>
+	</div>
+	<script type="text/javascript" src="{{ url_for('static',filename='jquery.min.js') }}"></script>
+	<script type="text/javascript" src="{{ url_for('static',filename='app.js') }}"></script>
+</body>

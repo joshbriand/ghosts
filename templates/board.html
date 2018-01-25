@@ -1,0 +1,965 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Ghosts!</title>
+	<link href="{{ url_for('static',filename='ghosts.css') }}" rel="stylesheet" type="text/css">
+</head>
+<body>
+	<div class="row" id="header">
+		<div class="col-3 head">
+			<h1 id="menuLink" style="cursor: pointer;">
+				<i>Ghosts!</i>
+			</h1>
+		</div>
+		<div class="col-6 head">
+			Logged in as {{playerUsername}}
+			<br>
+			{% with messages=get_flashed_messages() %}
+				{% if messages %}
+					{% for message in messages %}
+						{{ message }}
+					{% endfor %}
+				{% endif %}
+			{% endwith %}
+		</div>
+		<div class="col-3 head">
+			<table>
+				<a href="{{ url_for('logout') }}">
+					<input type="submit" value="Log Out"></input>
+				</a>
+			</table>
+		</div>
+	</div>
+	<div class="row" id="canvas">
+		<br>
+		<div class="col-half" id="side"></div>
+		<div style="display: none;" id="turn">
+			{{ game.previousPlayer }}
+		</div>
+		<div style="display: none;" id="player">
+			{{ userPlayer }}
+		</div>
+		<div class="col-2" id="side">
+			<h2>
+				{% if game.previousPlayer == 0 or game.previousPlayer == startingVal %}
+					{{playerUsername}}'s Ghosts to be Placed
+				{% else %}
+					Ghosts that <u>{{playerUsername}}</u> Has Captured
+				{% endif %}
+			</h2>
+			<table id="board">
+				<tr class="row-1" id="playerBoard">
+					<td class="col-1" id="s-1-player">
+						{% if game.previousPlayer == 0 or game.previousPlayer == startingVal %}
+							{% if userPlayer == 1 %}
+								<div class="playerGhost" id="p1b1"><div class="blue"></div></div>
+							{% else %}
+								<div class="playerGhost" id="p2b1"><div class="blue"></div></div>
+							{% endif %}
+						{% elif game.previousPlayer == 1 or game.previousPlayer == 2 %}
+							{% if userPlayer == 1 %}
+								{% if "p2b1" in deadGhosts %}
+									<div class="playerGhost" id="p2b1"><div class="blue"></div></div>
+								{% endif %}
+							{% else %}
+								{% if "p1b1" in deadGhosts %}
+									<div class="playerGhost" id="p1b1"><div class="blue"></div></div>
+								{% endif %}
+							{% endif %}
+						{% endif %}
+					</td>
+					<td class="col-1" id="s-2-player">
+						{% if game.previousPlayer == 0 or game.previousPlayer == startingVal %}
+							{% if userPlayer == 1 %}
+								<div class="playerGhost" id="p1b2"><div class="blue"></div></div>
+							{% else %}
+								<div class="playerGhost" id="p2b2"><div class="blue"></div></div>
+							{% endif %}
+						{% elif game.previousPlayer == 1 or game.previousPlayer == 2 %}
+							{% if userPlayer == 1 %}
+								{% if "p2b2" in deadGhosts %}
+									<div class="playerGhost" id="p2b2"><div class="blue"></div></div>
+								{% endif %}
+							{% else %}
+								{% if "p1b2" in deadGhosts %}
+									<div class="playerGhost" id="p1b2"><div class="blue"></div></div>
+								{% endif %}
+							{% endif %}
+						{% endif %}
+					</td>
+				</tr>
+				<tr class="row-1" id="playerBoard">
+					<td class="col-1" id="s-3-player">
+						{% if game.previousPlayer == 0 or game.previousPlayer == startingVal %}
+							{% if userPlayer == 1 %}
+								<div class="playerGhost" id="p1b3"><div class="blue"></div></div>
+							{% else %}
+								<div class="playerGhost" id="p2b3"><div class="blue"></div></div>
+							{% endif %}
+						{% elif game.previousPlayer == 1 or game.previousPlayer == 2 %}
+							{% if userPlayer == 1 %}
+								{% if "p2b3" in deadGhosts %}
+									<div class="playerGhost" id="p2b3"><div class="blue"></div></div>
+								{% endif %}
+							{% else %}
+								{% if "p1b3" in deadGhosts %}
+									<div class="playerGhost" id="p1b3"><div class="blue"></div></div>
+								{% endif %}
+							{% endif %}
+						{% endif %}
+					</td>
+					<td class="col-1" id="s-4-player">
+						{% if game.previousPlayer == 0 or game.previousPlayer == startingVal %}
+							{% if userPlayer == 1 %}
+								<div class="playerGhost" id="p1b4"><div class="blue"></div></div>
+							{% else %}
+								<div class="playerGhost" id="p2b4"><div class="blue"></div></div>
+							{% endif %}
+						{% elif game.previousPlayer == 1 or game.previousPlayer == 2 %}
+							{% if userPlayer == 1 %}
+								{% if "p2b4" in deadGhosts %}
+									<div class="playerGhost" id="p2b4"><div class="blue"></div></div>
+								{% endif %}
+							{% else %}
+								{% if "p1b4" in deadGhosts %}
+									<div class="playerGhost" id="p1b4"><div class="blue"></div></div>
+								{% endif %}
+							{% endif %}
+						{% endif %}
+					</td>
+				</tr>
+				<tr class="row-1" id="playerBoard">
+					<td class="col-1" id="s-5-player">
+						{% if game.previousPlayer == 0 or game.previousPlayer == startingVal %}
+							{% if userPlayer == 1 %}
+								<div class="playerGhost" id="p1y1"><div class="yellow"></div></div>
+							{% else %}
+								<div class="playerGhost" id="p2y1"><div class="yellow"></div></div>
+							{% endif %}
+						{% elif game.previousPlayer == 1 or game.previousPlayer == 2 %}
+							{% if userPlayer == 1 %}
+								{% if "p2y1" in deadGhosts %}
+									<div class="playerGhost" id="p2y1"><div class="yellow"></div></div>
+								{% endif %}
+							{% else %}
+								{% if "p1y1" in deadGhosts %}
+									<div class="playerGhost" id="p1y1"><div class="yellow"></div></div>
+								{% endif %}
+							{% endif %}
+						{% endif %}
+					</td>
+					<td class="col-1" id="s-6-player">
+						{% if game.previousPlayer == 0 or game.previousPlayer == startingVal %}
+							{% if userPlayer == 1 %}
+								<div class="playerGhost" id="p1y2"><div class="yellow"></div></div>
+							{% else %}
+								<div class="playerGhost" id="p2y2"><div class="yellow"></div></div>
+							{% endif %}
+						{% elif game.previousPlayer == 1 or game.previousPlayer == 2 %}
+							{% if userPlayer == 1 %}
+								{% if "p2y2" in deadGhosts %}
+									<div class="playerGhost" id="p2y2"><div class="yellow"></div></div>
+								{% endif %}
+							{% else %}
+								{% if "p1y2" in deadGhosts %}
+									<div class="playerGhost" id="p1y2"><div class="yellow"></div></div>
+								{% endif %}
+							{% endif %}
+						{% endif %}
+					</td>
+				</tr>
+				<tr class="row-1" id="playerBoard">
+					<td class="col-1" id="s-7-player">
+						{% if game.previousPlayer == 0 or game.previousPlayer == startingVal %}
+							{% if userPlayer == 1 %}
+								<div class="playerGhost" id="p1y3"><div class="yellow"></div></div>
+							{% else %}
+								<div class="playerGhost" id="p2y3"><div class="yellow"></div></div>
+							{% endif %}
+						{% elif game.previousPlayer == 1 or game.previousPlayer == 2 %}
+							{% if userPlayer == 1 %}
+								{% if "p2y3" in deadGhosts %}
+									<div class="playerGhost" id="p2y3"><div class="yellow"></div></div>
+								{% endif %}
+							{% else %}
+								{% if "p1y3" in deadGhosts %}
+									<div class="playerGhost" id="p1y3"><div class="yellow"></div></div>
+								{% endif %}
+							{% endif %}
+						{% endif %}
+					</td>
+					<td class="col-1" id="s-8-player">
+						{% if game.previousPlayer == 0 or game.previousPlayer == startingVal %}
+							{% if userPlayer == 1 %}
+								<div class="playerGhost" id="p1y4"><div class="yellow"></div></div>
+							{% else %}
+								<div class="playerGhost" id="p2y4"><div class="yellow"></div></div>
+							{% endif %}
+						{% elif game.previousPlayer == 1 or game.previousPlayer == 2 %}
+							{% if userPlayer == 1 %}
+								{% if "p2y4" in deadGhosts %}
+									<div class="playerGhost" id="p2y4"><div class="yellow"></div></div>
+								{% endif %}
+							{% else %}
+								{% if "p1y4" in deadGhosts %}
+									<div class="playerGhost" id="p1y4"><div class="yellow"></div></div>
+								{% endif %}
+							{% endif %}
+						{% endif %}
+					</td>
+				</tr>
+			</table>
+			<br>
+			<form id="turnSubmit" method="POST">
+				<div class="data">
+					<input type="text" id="playerID" name="playerID" value="{{ userid }}"></input>
+					<input type="text" id="moves" name="moves"></input>
+					<input type="text" id="dead" name="dead"></input>
+					<input type="text" id="originalLocation" name="originalLocation"></input>
+				</div>
+				<input id="submitTurn" type="submit" value="Submit Turn"></input>
+			</form>
+		</div>
+		<div class="col-half" id="side"></div>
+		<div id="board">
+			<div class="col-6" id="end">
+				<h1>
+					<br>
+					<br>
+					Game Over!
+					<br>
+					<br>
+					{% if winner == userPlayer %}
+						Congratulations, you win!!!
+						<br><br>You
+					{% else %}
+						Sorry, <u>{{ opponent.name }}</u> wins
+						<br><br><u>{{ opponent.name }}</u>
+					{% endif %}
+					won by
+					{% if wonBy == "blue" %}
+						collecting all the blue ghosts
+					{% elif wonBy == "yellow" %}
+						losing all the yellow ghosts
+					{% elif wonBy == "exit" %}
+						having a blue ghost exit the board
+					{% endif %}
+				</h1>
+			</div>
+			<br>
+			<table>
+				<tr class="row-1" id="row-one">
+					<td class="col-1" id="b11">
+						{% if game.b11 %}
+							{% if game.b11[1] == userPlayer | string %}
+								<div class = "playerGhost" id="{{ game.b11 }}">
+									{% if game.b11[2] == 'y' %}
+										<div class="yellow"></div>
+									{% else %}
+										<div class="blue"></div>
+									{% endif %}
+								</div>
+							{% else %}
+								<div id="opponent"></div>
+							{% endif %}
+						{% endif %}
+					</td>
+					<td class="col-1" id="b21">
+						{% if game.b21 %}
+							{% if game.b21[1] == userPlayer | string %}
+								<div class = "playerGhost" id="{{ game.b21 }}">
+									{% if game.b21[2] == 'y' %}
+										<div class="yellow"></div>
+									{% else %}
+										<div class="blue"></div>
+									{% endif %}
+								</div>
+							{% else %}
+								<div id="opponent"></div>
+							{% endif %}
+						{% endif %}
+					</td>
+					<td class="col-1" id="b31">
+						{% if game.b31 %}
+							{% if game.b31[1] == userPlayer | string %}
+								<div class = "playerGhost" id="{{ game.b31 }}">
+									{% if game.b31[2] == 'y' %}
+										<div class="yellow"></div>
+									{% else %}
+										<div class="blue"></div>
+									{% endif %}
+								</div>
+							{% else %}
+								<div id="opponent"></div>
+							{% endif %}
+						{% endif %}
+					</td>
+					<td class="col-1" id="b41">
+						{% if game.b41 %}
+							{% if game.b41[1] == userPlayer | string %}
+								<div class = "playerGhost" id="{{ game.b41 }}">
+									{% if game.b41[2] == 'y' %}
+										<div class="yellow"></div>
+									{% else %}
+										<div class="blue"></div>
+									{% endif %}
+								</div>
+							{% else %}
+								<div id="opponent"></div>
+							{% endif %}
+						{% endif %}
+					</td>
+					<td class="col-1" id="b51">
+						{% if game.b51 %}
+							{% if game.b51[1] == userPlayer | string %}
+								<div class = "playerGhost" id="{{ game.b51 }}">
+									{% if game.b51[2] == 'y' %}
+										<div class="yellow"></div>
+									{% else %}
+										<div class="blue"></div>
+									{% endif %}
+								</div>
+							{% else %}
+								<div id="opponent"></div>
+							{% endif %}
+						{% endif %}
+					</td>
+					<td class="col-1" id="b61">
+						{% if game.b61 %}
+							{% if game.b61[1] == userPlayer | string %}
+								<div class = "playerGhost" id="{{ game.b61 }}">
+									{% if game.b61[2] == 'y' %}
+										<div class="yellow"></div>
+									{% else %}
+										<div class="blue"></div>
+									{% endif %}
+								</div>
+							{% else %}
+								<div id="opponent"></div>
+							{% endif %}
+						{% endif %}
+					</td>
+				</tr>
+				<tr class="row-1" id="row-two">
+					<td class="col-1" id="b12">
+						{% if game.b12 %}
+							{% if game.b12[1] == userPlayer | string %}
+								<div class = "playerGhost" id="{{ game.b12 }}">
+									{% if game.b12[2] == 'y' %}
+										<div class="yellow"></div>
+									{% else %}
+										<div class="blue"></div>
+									{% endif %}
+								</div>
+							{% else %}
+								<div id="opponent"></div>
+							{% endif %}
+						{% endif %}
+					</td>
+					<td class="col-1" id="b22">
+						{% if game.b22 %}
+							{% if game.b22[1] == userPlayer | string %}
+								<div class = "playerGhost" id="{{ game.b22 }}">
+									{% if game.b22[2] == 'y' %}
+										<div class="yellow"></div>
+									{% else %}
+										<div class="blue"></div>
+									{% endif %}
+								</div>
+							{% else %}
+								<div id="opponent"></div>
+							{% endif %}
+						{% endif %}
+					</td>
+					<td class="col-1" id="b32">
+						{% if game.b32 %}
+							{% if game.b32[1] == userPlayer | string %}
+								<div class = "playerGhost" id="{{ game.b32 }}">
+									{% if game.b32[2] == 'y' %}
+										<div class="yellow"></div>
+									{% else %}
+										<div class="blue"></div>
+									{% endif %}
+								</div>
+							{% else %}
+								<div id="opponent"></div>
+							{% endif %}
+						{% endif %}
+					</td>
+					<td class="col-1" id="b42">
+						{% if game.b42 %}
+							{% if game.b42[1] == userPlayer | string %}
+								<div class = "playerGhost" id="{{ game.b42 }}">
+									{% if game.b42[2] == 'y' %}
+										<div class="yellow"></div>
+									{% else %}
+										<div class="blue"></div>
+									{% endif %}
+								</div>
+							{% else %}
+								<div id="opponent"></div>
+							{% endif %}
+						{% endif %}
+					</td>
+					<td class="col-1" id="b52">
+						{% if game.b52 %}
+							{% if game.b52[1] == userPlayer | string %}
+								<div class = "playerGhost" id="{{ game.b52 }}">
+									{% if game.b52[2] == 'y' %}
+										<div class="yellow"></div>
+									{% else %}
+										<div class="blue"></div>
+									{% endif %}
+								</div>
+							{% else %}
+								<div id="opponent"></div>
+							{% endif %}
+						{% endif %}
+					</td>
+					<td class="col-1" id="b62">
+						{% if game.b62 %}
+							{% if game.b62[1] == userPlayer | string %}
+								<div class = "playerGhost" id="{{ game.b62 }}">
+									{% if game.b62[2] == 'y' %}
+										<div class="yellow"></div>
+									{% else %}
+										<div class="blue"></div>
+									{% endif %}
+								</div>
+							{% else %}
+								<div id="opponent"></div>
+							{% endif %}
+						{% endif %}
+					</td>
+				</tr>
+				<tr class="row-1" id="row-three">
+					<td class="col-1" id="b13">
+						{% if game.b13 %}
+							{% if game.b13[1] == userPlayer | string %}
+								<div class = "playerGhost" id="{{ game.b13 }}">
+									{% if game.b13[2] == 'y' %}
+										<div class="yellow"></div>
+									{% else %}
+										<div class="blue"></div>
+									{% endif %}
+								</div>
+							{% else %}
+								<div id="opponent"></div>
+							{% endif %}
+						{% endif %}
+					</td>
+					<td class="col-1" id="b23">
+						{% if game.b23 %}
+							{% if game.b23[1] == userPlayer | string %}
+								<div class = "playerGhost" id="{{ game.b23 }}">
+									{% if game.b23[2] == 'y' %}
+										<div class="yellow"></div>
+									{% else %}
+										<div class="blue"></div>
+									{% endif %}
+								</div>
+							{% else %}
+								<div id="opponent"></div>
+							{% endif %}
+						{% endif %}
+					</td>
+					<td class="col-1" id="b33">
+						{% if game.b33 %}
+							{% if game.b33[1] == userPlayer | string %}
+								<div class = "playerGhost" id="{{ game.b33 }}">
+									{% if game.b33[2] == 'y' %}
+										<div class="yellow"></div>
+									{% else %}
+										<div class="blue"></div>
+									{% endif %}
+								</div>
+							{% else %}
+								<div id="opponent"></div>
+							{% endif %}
+						{% endif %}
+					</td>
+					<td class="col-1" id="b43">
+						{% if game.b43 %}
+							{% if game.b43[1] == userPlayer | string %}
+								<div class = "playerGhost" id="{{ game.b43 }}">
+									{% if game.b43[2] == 'y' %}
+										<div class="yellow"></div>
+									{% else %}
+										<div class="blue"></div>
+									{% endif %}
+								</div>
+							{% else %}
+								<div id="opponent"></div>
+							{% endif %}
+						{% endif %}
+					</td>
+					<td class="col-1" id="b53">
+						{% if game.b53 %}
+							{% if game.b53[1] == userPlayer | string %}
+								<div class = "playerGhost" id="{{ game.b53 }}">
+									{% if game.b53[2] == 'y' %}
+										<div class="yellow"></div>
+									{% else %}
+										<div class="blue"></div>
+									{% endif %}
+								</div>
+							{% else %}
+								<div id="opponent"></div>
+							{% endif %}
+						{% endif %}
+					</td>
+					<td class="col-1" id="b63">
+						{% if game.b63 %}
+							{% if game.b63[1] == userPlayer | string %}
+								<div class = "playerGhost" id="{{ game.b63 }}">
+									{% if game.b63[2] == 'y' %}
+										<div class="yellow"></div>
+									{% else %}
+										<div class="blue"></div>
+									{% endif %}
+								</div>
+							{% else %}
+								<div id="opponent"></div>
+							{% endif %}
+						{% endif %}
+					</td>
+				</tr>
+				<tr class="row-1" id="row-four">
+					<td class="col-1" id="b14">
+						{% if game.b14 %}
+							{% if game.b14[1] == userPlayer | string %}
+								<div class = "playerGhost" id="{{ game.b14 }}">
+									{% if game.b14[2] == 'y' %}
+										<div class="yellow"></div>
+									{% else %}
+										<div class="blue"></div>
+									{% endif %}
+								</div>
+							{% else %}
+								<div id="opponent"></div>
+							{% endif %}
+						{% endif %}
+					</td>
+					<td class="col-1" id="b24">
+						{% if game.b24 %}
+							{% if game.b24[1] == userPlayer | string %}
+								<div class = "playerGhost" id="{{ game.b24 }}">
+									{% if game.b24[2] == 'y' %}
+										<div class="yellow"></div>
+									{% else %}
+										<div class="blue"></div>
+									{% endif %}
+								</div>
+							{% else %}
+								<div id="opponent"></div>
+							{% endif %}
+						{% endif %}
+					</td>
+					<td class="col-1" id="b34">
+						{% if game.b34 %}
+							{% if game.b34[1] == userPlayer | string %}
+								<div class = "playerGhost" id="{{ game.b34 }}">
+									{% if game.b34[2] == 'y' %}
+										<div class="yellow"></div>
+									{% else %}
+										<div class="blue"></div>
+									{% endif %}
+								</div>
+							{% else %}
+								<div id="opponent"></div>
+							{% endif %}
+						{% endif %}
+					</td>
+					<td class="col-1" id="b44">
+						{% if game.b44 %}
+							{% if game.b44[1] == userPlayer | string %}
+								<div class = "playerGhost" id="{{ game.b44 }}">
+									{% if game.b44[2] == 'y' %}
+										<div class="yellow"></div>
+									{% else %}
+										<div class="blue"></div>
+									{% endif %}
+								</div>
+							{% else %}
+								<div id="opponent"></div>
+							{% endif %}
+						{% endif %}
+					</td>
+					<td class="col-1" id="b54">
+						{% if game.b54 %}
+							{% if game.b54[1] == userPlayer | string %}
+								<div class = "playerGhost" id="{{ game.b54 }}">
+									{% if game.b54[2] == 'y' %}
+										<div class="yellow"></div>
+									{% else %}
+										<div class="blue"></div>
+									{% endif %}
+								</div>
+							{% else %}
+								<div id="opponent"></div>
+							{% endif %}
+						{% endif %}
+					</td>
+					<td class="col-1" id="b64">
+						{% if game.b64 %}
+							{% if game.b64[1] == userPlayer | string %}
+								<div class = "playerGhost" id="{{ game.b64 }}">
+									{% if game.b64[2] == 'y' %}
+										<div class="yellow"></div>
+									{% else %}
+										<div class="blue"></div>
+									{% endif %}
+								</div>
+							{% else %}
+								<div id="opponent"></div>
+							{% endif %}
+						{% endif %}
+					</td>
+				</tr>
+				<tr class="row-1" id="row-five">
+					<td class="col-1" id="b15">
+						{% if game.b15 %}
+							{% if game.b15[1] == userPlayer | string %}
+								<div class = "playerGhost" id="{{ game.b15 }}">
+									{% if game.b15[2] == 'y' %}
+										<div class="yellow"></div>
+									{% else %}
+										<div class="blue"></div>
+									{% endif %}
+								</div>
+							{% else %}
+								<div id="opponent"></div>
+							{% endif %}
+						{% endif %}
+					</td>
+					<td class="col-1" id="b25">
+						{% if game.b25 %}
+							{% if game.b25[1] == userPlayer | string %}
+								<div class = "playerGhost" id="{{ game.b25 }}">
+									{% if game.b25[2] == 'y' %}
+										<div class="yellow"></div>
+									{% else %}
+										<div class="blue"></div>
+									{% endif %}
+								</div>
+							{% else %}
+								<div id="opponent"></div>
+							{% endif %}
+						{% endif %}
+					</td>
+					<td class="col-1" id="b35">
+						{% if game.b35 %}
+							{% if game.b35[1] == userPlayer | string %}
+								<div class = "playerGhost" id="{{ game.b35 }}">
+									{% if game.b35[2] == 'y' %}
+										<div class="yellow"></div>
+									{% else %}
+										<div class="blue"></div>
+									{% endif %}
+								</div>
+							{% else %}
+								<div id="opponent"></div>
+							{% endif %}
+						{% endif %}
+					</td>
+					<td class="col-1" id="b45">
+						{% if game.b45 %}
+							{% if game.b45[1] == userPlayer | string %}
+								<div class = "playerGhost" id="{{ game.b45 }}">
+									{% if game.b45[2] == 'y' %}
+										<div class="yellow"></div>
+									{% else %}
+										<div class="blue"></div>
+									{% endif %}
+								</div>
+							{% else %}
+								<div id="opponent"></div>
+							{% endif %}
+						{% endif %}
+					</td>
+					<td class="col-1" id="b55">
+						{% if game.b55 %}
+							{% if game.b55[1] == userPlayer | string %}
+								<div class = "playerGhost" id="{{ game.b55 }}">
+									{% if game.b55[2] == 'y' %}
+										<div class="yellow"></div>
+									{% else %}
+										<div class="blue"></div>
+									{% endif %}
+								</div>
+							{% else %}
+								<div id="opponent"></div>
+							{% endif %}
+						{% endif %}
+					</td>
+					<td class="col-1" id="b65">
+						{% if game.b65 %}
+							{% if game.b65[1] == userPlayer | string %}
+								<div class = "playerGhost" id="{{ game.b65 }}">
+									{% if game.b65[2] == 'y' %}
+										<div class="yellow"></div>
+									{% else %}
+										<div class="blue"></div>
+									{% endif %}
+								</div>
+							{% else %}
+								<div id="opponent"></div>
+							{% endif %}
+						{% endif %}
+					</td>
+				</tr>
+				<tr class="row-1" id="row-six">
+					<td class="col-1" id="b16">
+						{% if game.b16 %}
+							{% if game.b16[1] == userPlayer | string %}
+								<div class = "playerGhost" id="{{ game.b16 }}">
+									{% if game.b16[2] == 'y' %}
+										<div class="yellow"></div>
+									{% else %}
+										<div class="blue"></div>
+									{% endif %}
+								</div>
+							{% else %}
+								<div id="opponent"></div>
+							{% endif %}
+						{% endif %}
+					</td>
+					<td class="col-1" id="b26">
+						{% if game.b26 %}
+							{% if game.b26[1] == userPlayer | string %}
+								<div class = "playerGhost" id="{{ game.b26 }}">
+									{% if game.b26[2] == 'y' %}
+										<div class="yellow"></div>
+									{% else %}
+										<div class="blue"></div>
+									{% endif %}
+								</div>
+							{% else %}
+								<div id="opponent"></div>
+							{% endif %}
+						{% endif %}
+					</td>
+					<td class="col-1" id="b36">
+						{% if game.b36 %}
+							{% if game.b36[1] == userPlayer | string %}
+								<div class = "playerGhost" id="{{ game.b36 }}">
+									{% if game.b36[2] == 'y' %}
+										<div class="yellow"></div>
+									{% else %}
+										<div class="blue"></div>
+									{% endif %}
+								</div>
+							{% else %}
+								<div id="opponent"></div>
+							{% endif %}
+						{% endif %}
+					</td>
+					<td class="col-1" id="b46">
+						{% if game.b46 %}
+							{% if game.b46[1] == userPlayer | string %}
+								<div class = "playerGhost" id="{{ game.b46 }}">
+									{% if game.b46[2] == 'y' %}
+										<div class="yellow"></div>
+									{% else %}
+										<div class="blue"></div>
+									{% endif %}
+								</div>
+							{% else %}
+								<div id="opponent"></div>
+							{% endif %}
+						{% endif %}
+					</td>
+					<td class="col-1" id="b56">
+						{% if game.b56 %}
+							{% if game.b56[1] == userPlayer | string %}
+								<div class = "playerGhost" id="{{ game.b56 }}">
+									{% if game.b56[2] == 'y' %}
+										<div class="yellow"></div>
+									{% else %}
+										<div class="blue"></div>
+									{% endif %}
+								</div>
+							{% else %}
+								<div id="opponent"></div>
+							{% endif %}
+						{% endif %}
+					</td>
+					<td class="col-1" id="b66">
+						{% if game.b66 %}
+							{% if game.b66[1] == userPlayer | string %}
+								<div class = "playerGhost" id="{{ game.b66 }}">
+									{% if game.b66[2] == 'y' %}
+										<div class="yellow"></div>
+									{% else %}
+										<div class="blue"></div>
+									{% endif %}
+								</div>
+							{% else %}
+								<div id="opponent"></div>
+							{% endif %}
+						{% endif %}
+					</td>
+				</tr>
+			</table>
+		</div>
+		<div class="col-half" id="side"></div>
+		<div class="col-2" id="side">
+			<h2>
+				{% if game.previousPlayer == 0 or game.previousPlayer == opponentStartingVal %}
+					{{ opponent.name }}'s Ghosts to be Placed
+				{% else %}
+					Ghosts that <u>{{ opponent.name }}</u> Has Captured
+				{% endif %}
+			</h2>
+			<table>
+				<tr class="row-1" id="opponentBoard">
+					<td class="col-1" id="s-1-opponent">
+						{% if game.previousPlayer == 0 or game.previousPlayer == opponentStartingVal %}
+							<div id="opponent"></div>
+						{% elif game.previousPlayer == 1 or game.previousPlayer == 2 %}
+							{% if userPlayer == 1 %}
+								{% if "p1b1" in deadGhosts %}
+									<div class="playerGhost" id="p1b1"><div class="blue"></div></div>
+								{% endif %}
+							{% else %}
+								{% if "p2b1" in deadGhosts %}
+									<div class="playerGhost" id="p2b1"><div class="blue"></div></div>
+								{% endif %}
+							{% endif %}
+						{% endif %}
+					</td>
+					<td class="col-1" id="s-2-opponent">
+						{% if game.previousPlayer == 0 or game.previousPlayer == opponentStartingVal %}
+							<div id="opponent"></div>
+						{% elif game.previousPlayer == 1 or game.previousPlayer == 2 %}
+							{% if userPlayer == 1 %}
+								{% if "p1b2" in deadGhosts %}
+									<div class="playerGhost" id="p1b2"><div class="blue"></div></div>
+								{% endif %}
+							{% else %}
+								{% if "p2b2" in deadGhosts %}
+									<div class="playerGhost" id="p2b2"><div class="blue"></div></div>
+								{% endif %}
+							{% endif %}
+						{% endif %}
+					</td>
+				</tr>
+				<tr class="row-1" id="opponentBoard">
+					<td class="col-1" id="s-3-opponent">
+						{% if game.previousPlayer == 0 or game.previousPlayer == opponentStartingVal %}
+							<div id="opponent"></div>
+						{% elif game.previousPlayer == 1 or game.previousPlayer == 2 %}
+							{% if userPlayer == 1 %}
+								{% if "p1b3" in deadGhosts %}
+									<div class="playerGhost" id="p1b3"><div class="blue"></div></div>
+								{% endif %}
+							{% else %}
+								{% if "p2b3" in deadGhosts %}
+									<div class="playerGhost" id="p2b3"><div class="blue"></div></div>
+								{% endif %}
+							{% endif %}
+						{% endif %}
+					</td>
+					<td class="col-1" id="s-4-opponent">
+						{% if game.previousPlayer == 0 or game.previousPlayer == opponentStartingVal %}
+							<div id="opponent"></div>
+						{% elif game.previousPlayer == 1 or game.previousPlayer == 2 %}
+							{% if userPlayer == 1 %}
+								{% if "p1b4" in deadGhosts %}
+									<div class="playerGhost" id="p1b4"><div class="blue"></div></div>
+								{% endif %}
+							{% else %}
+								{% if "p2b4" in deadGhosts %}
+									<div class="playerGhost" id="p2b4"><div class="blue"></div></div>
+								{% endif %}
+							{% endif %}
+						{% endif %}
+					</td>
+				</tr>
+				<tr class="row-1" id="opponentBoard">
+					<td class="col-1" id="s-5-opponent">
+						{% if game.previousPlayer == 0 or game.previousPlayer == opponentStartingVal %}
+							<div id="opponent"></div>
+						{% elif game.previousPlayer == 1 or game.previousPlayer == 2 %}
+							{% if userPlayer == 1 %}
+								{% if "p1y1" in deadGhosts %}
+									<div class="playerGhost" id="p1y1"><div class="yellow"></div></div>
+								{% endif %}
+							{% else %}
+								{% if "p2y1" in deadGhosts %}
+									<div class="playerGhost" id="p2y1"><div class="yellow"></div></div>
+								{% endif %}
+							{% endif %}
+						{% endif %}
+					</td>
+					<td class="col-1" id="s-6-opponent">
+						{% if game.previousPlayer == 0 or game.previousPlayer == opponentStartingVal %}
+							<div id="opponent"></div>
+						{% elif game.previousPlayer == 1 or game.previousPlayer == 2 %}
+							{% if userPlayer == 1 %}
+								{% if "p1y2" in deadGhosts %}
+									<div class="playerGhost" id="p1y2"><div class="yellow"></div></div>
+								{% endif %}
+							{% else %}
+								{% if "p2y2" in deadGhosts %}
+									<div class="playerGhost" id="p2y2"><div class="yellow"></div></div>
+								{% endif %}
+							{% endif %}
+						{% endif %}
+					</td>
+				</tr>
+				<tr class="row-1" id="opponentBoard">
+					<td class="col-1" id="s-7-opponent">
+						{% if game.previousPlayer == 0 or game.previousPlayer == opponentStartingVal %}
+							<div id="opponent"></div>
+						{% elif game.previousPlayer == 1 or game.previousPlayer == 2 %}
+							{% if userPlayer == 1 %}
+								{% if "p1y3" in deadGhosts %}
+									<div class="playerGhost" id="p1y3"><div class="yellow"></div></div>
+								{% endif %}
+							{% else %}
+								{% if "p2y3" in deadGhosts %}
+									<div class="playerGhost" id="p2y3"><div class="yellow"></div></div>
+								{% endif %}
+							{% endif %}
+						{% endif %}
+					</td>
+					<td class="col-1" id="s-8-opponent">
+						{% if game.previousPlayer == 0 or game.previousPlayer == opponentStartingVal %}
+							<div id="opponent"></div>
+						{% elif game.previousPlayer == 1 or game.previousPlayer == 2 %}
+							{% if userPlayer == 1 %}
+								{% if "p1y4" in deadGhosts %}
+									<div class="playerGhost" id="p1y4"><div class="yellow"></div></div>
+								{% endif %}
+							{% else %}
+								{% if "p2y4" in deadGhosts %}
+									<div class="playerGhost" id="p2y4"><div class="yellow"></div></div>
+								{% endif %}
+							{% endif %}
+						{% endif %}
+					</td>
+				</tr>
+			</table>
+		</div>
+		<div class="col-half" id="side"></div>
+	</div>
+	<script type="text/javascript" src="{{ url_for('static',filename='jquery.min.js') }}"></script>
+	<script>
+		function menuRedirect() {
+			console.log('here');
+			window.location.href = '/menu/';
+		}
+		$('#menuLink').bind('click', menuRedirect);
+	</script>
+	{% if game.previousPlayer == userPlayer or game.previousPlayer == userPlayer * 10 %}
+	{% else %}
+		<script type="text/javascript" src="{{ url_for('static',filename='app.js') }}"></script>
+	{% endif %}
+	{% if winner != '' %}
+		<script>
+			$('#end').css('display', 'block');
+		</script>
+	{% endif %}
+</body>

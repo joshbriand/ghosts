@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Ghosts!</title>
+	<link href="{{ url_for('static',filename='ghosts.css') }}" rel="stylesheet" type="text/css">
+</head>
+<body>
+	<div class="row" id="header">
+		<div class="col-3 head">
+			<h1>
+				<i>Ghosts!</i>
+			</h1>
+		</div>
+		<div class="col-6 head">
+			Logged in as {{playerUsername}}
+		</div>
+		<div class="col-3 head">
+			<table>
+				<a href="{{ url_for('logout') }}">
+					<input type="submit" value="Log Out"></input>
+				</a>
+			</table>
+		</div>
+	</div>
+	<div class="row" id="canvas">
+		<br>
+		<div class="col-half" id="side"></div>
+		<div class="col-2" id="side">
+			<h2>
+				{% if userPlayer == 1 %}
+					{{playerUsername}}
+				{% else %}
+					{{ opponent.name }}
+				{% endif %}
+			</h2>
+			<h2>
+				{% if game.previousPlayer == 0 %}
+					Ghosts to be Placed
+				{% else %}
+					Captured Ghosts
+				{% endif %}
+			</h2>
+			<table id="board">
+				<tr class="row-1" id="player">
+					<td class="col-1" id="s-1-player"></td>
+					<td class="col-1" id="s-2-player"></td>
+				</tr>
+				<tr class="row-1" id="player">
+					<td class="col-1" id="s-3-player"></td>
+					<td class="col-1" id="s-4-player"></td>
+				</tr>
+				<tr class="row-1" id="player">
+					<td class="col-1" id="s-5-player"></td>
+					<td class="col-1" id="s-6-player"></td>
+				</tr>
+				<tr class="row-1" id="player">
+					<td class="col-1" id="s-7-player"></td>
+					<td class="col-1" id="s-8-player"></td>
+				</tr>
+			</table>
+			<br>
+			<form id="turnSubmit">
+				<input id="submitTurn" type="submit" value="Submit Turn"></input>
+			</form>
+		</div>
+		<div class="col-half" id="side"></div>
+		<div id="board">
+			<br>
+			<form>
+				<table>
+					<tr class="row-1" id="row-one">
+						<td class="col-1 exit" id="b-1-1"><div class="opponentGhost"></div></td>
+						<td class="col-1" id="b-2-1"><div class="opponentGhost"></div></td>
+						<td class="col-1" id="b-3-1"><div class="opponentGhost"></div></td>
+						<td class="col-1" id="b-4-1"><div class="opponentGhost"></div></td>
+						<td class="col-1" id="b-5-1"><div class="opponentGhost"></div></td>
+						<td class="col-1 exit" id="b-6-1"><div class="opponentGhost"></div></td>
+					</tr>
+					<tr class="row-1" id="row-two">
+						<td class="col-1" id="b-1-2"><div class="opponentGhost"></div></td>
+						<td class="col-1" id="b-2-2"></td>
+						<td class="col-1" id="b-3-2"></td>
+						<td class="col-1" id="b-4-2"></td>
+						<td class="col-1" id="b-5-2"></td>
+						<td class="col-1" id="b-6-2"><div class="opponentGhost"></div></td>
+					</tr>
+					<tr class="row-1" id="row-three">
+						<td class="col-1" id="b-1-3"></td>
+						<td class="col-1" id="b-2-3"></td>
+						<td class="col-1" id="b-3-3"></td>
+						<td class="col-1" id="b-4-3"></td>
+						<td class="col-1" id="b-5-3"></td>
+						<td class="col-1" id="b-6-3"></td>
+					</tr>
+					<tr class="row-1" id="row-four">
+						<td class="col-1" id="b-1-4"></td>
+						<td class="col-1" id="b-2-4"></td>
+						<td class="col-1" id="b-3-4"></td>
+						<td class="col-1" id="b-4-4"></td>
+						<td class="col-1" id="b-5-4"></td>
+						<td class="col-1" id="b-6-4"></td>
+					</tr>
+					<tr class="row-1" id="row-five">
+						<td class="col-1" id="b-1-5"></td>
+						<td class="col-1" id="b-2-5"></td>
+						<td class="col-1" id="b-3-5"></div><div class="playerGhost" id="blue1"><div class="blue"></td>
+						<td class="col-1" id="b-4-5"><div class="playerGhost" id="blue2"><div class="blue"></div></div></td>
+						<td class="col-1" id="b-5-5"></td>
+						<td class="col-1" id="b-6-5"></td>
+					</tr>
+					<tr class="row-1" id="row-six">
+						<td class="col-1 exit" id="b-1-6"><div class="playerGhost" id="yellow1"><div class="yellow"></div></div></td>
+						<td class="col-1" id="b-2-6"><div class="playerGhost" id="yellow2"><div class="yellow"></div></div></td>
+						<td class="col-1" id="b-3-6"><div class="playerGhost" id="blue3"><div class="blue"></div></div></td>
+						<td class="col-1" id="b-4-6"><div class="playerGhost" id="yellow3"><div class="yellow"></div></div></td>
+						<td class="col-1" id="b-5-6"><div class="playerGhost" id="yellow4"><div class="yellow"></div></div></td>
+						<td class="col-1  exit" id="b-6-6"><div class="playerGhost" id="blue4"><div class="blue"></div></div></td>
+					</tr>
+				</table>
+			</form>
+		</div>
+		<div class="col-half" id="side"></div>
+		<div class="col-2" id="side">
+			<h2>
+				{% if userPlayer == 2 %}
+					{{playerUsername}}
+				{% else %}
+					{{ opponent.name }}
+				{% endif %}
+			</h2>
+			<h2>
+				{% if game.previousPlayer == 0 %}
+					Ghosts to be Placed
+				{% else %}
+					Captured Ghosts
+				{% endif %}
+			</h2>
+			<table>
+				<tr class="row-1" id="opponent">
+					<td class="col-1" id="s-1-opponent"></td>
+					<td class="col-1" id="s-2-opponent"></td>
+				</tr>
+				<tr class="row-1" id="opponent">
+					<td class="col-1" id="s-3-opponent"></td>
+					<td class="col-1" id="s-4-opponent"></td>
+				</tr>
+				<tr class="row-1" id="opponent">
+					<td class="col-1" id="s-5-opponent"></td>
+					<td class="col-1" id="s-6-opponent"></td>
+				</tr>
+				<tr class="row-1" id="opponent">
+					<td class="col-1" id="s-7-opponent"></td>
+					<td class="col-1" id="s-8-opponent"></td>
+				</tr>
+			</table>
+		</div>
+		<div class="col-half" id="side"></div>
+	</div>
+	<script type="text/javascript" src="{{ url_for('static',filename='jquery.min.js') }}"></script>
+	<script type="text/javascript" src="{{ url_for('static',filename='app.js') }}"></script>
+</body>
